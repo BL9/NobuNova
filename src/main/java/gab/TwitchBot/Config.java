@@ -6,4 +6,6 @@ public class Config {
     public int Port;
     public String Nick;
     public String Channel;
+    public String JoinMessage;
+    public String Prefix;
 }
