@@ -21,15 +21,11 @@
     <jacoco.unit-tests.limit.method-complexity>5</jacoco.unit-tests.limit.method-complexity>
   </properties>
   <dependencies>
-
     <dependency>
-      <groupId>pircbot</groupId>
-      <artifactId>pircbot</artifactId>
-      <version>1.5.0</version>
+      <groupId>org.kitteh.irc</groupId>
+      <artifactId>client-lib</artifactId>
+      <version>8.0.0</version>
     </dependency>
-
-
-    
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>

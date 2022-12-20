@@ -1,17 +1,30 @@
 package gab;
 
+import java.io.IOException;
+
+import gab.TwitchBot.TwitchBot;
+
 /**
  * Hello world!
  */
 public final class App {
+    static ConfigHelper config;
+    static TwitchBot twitchBot;
+
     private App() {
+        
     }
 
-    /**
-     * Says hello to the world.
-     * @param args The arguments of the program.
-     */
+
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        try {
+            config = new ConfigHelper();
+            twitchBot = new TwitchBot(config);
+
+            twitchBot.connect();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
