@@ -30,7 +30,7 @@ public class ProfileHelper {
             String[] segments = reader.nextLine().split(";");
 
             if(segments.length == 3)
-                profiles.add(new Profile(segments[0], segments[1] == "1", Integer.parseInt(segments[2])));
+                profiles.add(new Profile(segments[0], (segments[1].compareTo("1") == 0), Integer.parseInt(segments[2])));
         }
         reader.close();
     }
