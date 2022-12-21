@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import gab.TwitchBot.TwitchBot;
 import gab.TwitchBot.Commands.OptInAttendanceCheckCommand;
+import gab.TwitchBot.Commands.OptOutAttendanceCheckCommand;
 import gab.Utils.ConfigHelper;
 
 /**
@@ -23,6 +24,7 @@ public final class App {
             config = new ConfigHelper();
             twitchBot = new TwitchBot(config);
             twitchBot.addCommand(new OptInAttendanceCheckCommand(twitchBot));
+            twitchBot.addCommand(new OptOutAttendanceCheckCommand(twitchBot));
 
             twitchBot.connect();
         } catch (IOException e) {
