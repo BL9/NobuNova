@@ -1,8 +1,9 @@
-package gab;
+package gab.Utils;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -23,7 +24,7 @@ public class ConfigHelper {
         if(!file.exists())
             file.createNewFile();
 
-        Scanner reader = new Scanner(file);
+        Scanner reader = new Scanner(file, StandardCharsets.UTF_8);
         while(reader.hasNextLine())
         {
             String line = reader.nextLine();

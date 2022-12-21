@@ -1,4 +1,4 @@
-package gab.TwitchBot.utils;
+package gab.TwitchBot.Utils;
 
 import org.kitteh.irc.client.library.event.channel.ChannelMessageEvent;
 

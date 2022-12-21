@@ -1,4 +1,4 @@
-package gab.Tools;
+package gab.Utils;
 
 public class Logger {
     private String prefix;

@@ -3,6 +3,8 @@ package gab;
 import java.io.IOException;
 
 import gab.TwitchBot.TwitchBot;
+import gab.TwitchBot.Commands.OptInAttendanceCheckCommand;
+import gab.Utils.ConfigHelper;
 
 /**
  * Hello world!
@@ -20,10 +22,10 @@ public final class App {
         try {
             config = new ConfigHelper();
             twitchBot = new TwitchBot(config);
+            twitchBot.addCommand(new OptInAttendanceCheckCommand(twitchBot));
 
             twitchBot.connect();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

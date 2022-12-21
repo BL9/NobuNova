@@ -1,21 +1,22 @@
 package gab.TwitchBot.Commands;
 
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
-import gab.TwitchBot.utils.CommandEvent;
+import gab.TwitchBot.Utils.CommandEvent;
 
 public abstract class Command {
-    private String name;
-    private Set<String> aliases;
-
-    public Command(String name, Set<String> aliases) {
-        this.name = name;
-        this.aliases = aliases;
-    }
+    protected String name;
+    protected Set<String> aliases = new HashSet<String>();
 
     public boolean isThisCommand(String command) {
-        return (name == command) || aliases.contains(command);
+        return (name.compareTo(command) == 0) || aliases.contains(command);
     }
 
-    public abstract void execute(CommandEvent event);
+    public abstract void execute(CommandEvent event) throws IOException;
+
+    protected void sendMessage(CommandEvent event, String message) {
+        event.getInnerEvent().getChannel().sendMessage("/me " + message);
+    }
 }

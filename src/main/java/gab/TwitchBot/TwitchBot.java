@@ -1,16 +1,15 @@
 package gab.TwitchBot;
 
 import org.kitteh.irc.client.library.Client;
-import org.kitteh.irc.client.library.element.Channel;
-import org.kitteh.irc.client.library.event.channel.ChannelJoinEvent;
+import org.kitteh.irc.client.library.Client.Builder.Server.SecurityType;
 import org.kitteh.irc.client.library.event.channel.ChannelMessageEvent;
 import org.kitteh.irc.client.library.event.client.ClientNegotiationCompleteEvent;
 import org.kitteh.irc.client.library.feature.twitch.TwitchSupport;
 
-import gab.ConfigHelper;
-import gab.Tools.Logger;
 import gab.TwitchBot.Commands.Command;
-import gab.TwitchBot.utils.CommandEvent;
+import gab.TwitchBot.Utils.CommandEvent;
+import gab.Utils.ConfigHelper;
+import gab.Utils.Logger;
 import net.engio.mbassy.listener.Handler;
 
 import java.io.IOException;
@@ -41,7 +40,7 @@ public class TwitchBot {
         config.save();
 
         client = Client.builder()
-                        .server().host(this.config.Address).port(this.config.Port)
+                        .server().host(this.config.Address).port(this.config.Port, SecurityType.SECURE)
                         .password(this.config.OAuthToken).then()
                         .nick(this.config.Nick)
                         .build();
@@ -66,11 +65,11 @@ public class TwitchBot {
     @Handler
     public void onConnect(ClientNegotiationCompleteEvent event) {
         logger.log("Connected.");
-        client.sendMessage(this.config.Channel, this.config.JoinMessage);
+        client.sendMessage(this.config.Channel, "/me " + this.config.JoinMessage);
     }
 
     @Handler
-    public void onMessageReceived(ChannelMessageEvent event) {
+    public void onMessageReceived(ChannelMessageEvent event) throws IOException {
         String sender = event.getActor().getNick();
         String message = event.getMessage();
 
