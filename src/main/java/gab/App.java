@@ -43,7 +43,7 @@ public final class App {
 
         twitchBot.connect();
     }
-    private static void setupDiscordBot(ConfigHelper config) {
+    private static void setupDiscordBot(ConfigHelper config) throws IOException {
         discordBot = new DiscordBot(config);
     }
 }

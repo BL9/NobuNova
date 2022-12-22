@@ -1,5 +1,6 @@
 package gab.DiscordBot;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,12 +20,13 @@ public class DiscordBot extends ListenerAdapter {
 
     private final Set<Command> commands;
 
-    public DiscordBot(ConfigHelper configHelper) {
+    public DiscordBot(ConfigHelper configHelper) throws IOException {
         this.logger = new Logger("Discord");
         this.commands = new HashSet<Command>();
 
         String token = configHelper.getValue("discord_token");
         String activity = configHelper.getValue("discord_activity");
+        configHelper.save();
 
         jda = JDABuilder.createDefault(token)
             .setActivity(Activity.listening(activity))
@@ -38,8 +40,13 @@ public class DiscordBot extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+        String commandName = event.getName();
+        String user = event.getUser().getAsTag();
+
+        logger.log("Command '" + commandName + "'received from: " + user);
+
         for (Command command : commands) {
-            if(command.isThisCommand(event.getName()))
+            if(command.isThisCommand(commandName))
             {
                 command.execute(event);
                 return;
