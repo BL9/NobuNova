@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -29,8 +30,8 @@ public class ProfileHelper {
         {
             String[] segments = reader.nextLine().split(";");
 
-            if(segments.length == 3)
-                profiles.add(new Profile(segments[0], (segments[1].compareTo("1") == 0), Integer.parseInt(segments[2])));
+            if(segments.length == 4)
+                profiles.add(new Profile(segments[0], (segments[1].compareTo("1") == 0), Integer.parseInt(segments[2]), (segments[3].compareTo("0") == 0) ? null : LocalDateTime.parse(segments[3])));
         }
         reader.close();
     }
@@ -51,7 +52,7 @@ public class ProfileHelper {
             if(profile.getIdentifier().compareTo(identifier) == 0)
                 return profile;
 
-        return new Profile(identifier, false, 0);
+        return new Profile(identifier, false, 0, null);
     }
 
     public void setProfile(Profile profile) {
