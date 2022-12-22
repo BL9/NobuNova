@@ -29,7 +29,6 @@ public class DiscordBot extends ListenerAdapter {
         configHelper.save();
 
         jda = JDABuilder.createDefault(token)
-            .setActivity(Activity.listening(activity))
             .addEventListeners(this)
             .build();
 
