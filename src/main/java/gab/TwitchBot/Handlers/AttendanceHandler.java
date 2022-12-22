@@ -9,7 +9,7 @@ import gab.Utils.Profile;
 import gab.Utils.ProfileHelper;
 import gab.Utils.TwitchHelper;
 
-public class AttendanceHandler extends PostwareHandler {
+public class AttendanceHandler extends WareHandler {
 
     public AttendanceHandler(TwitchBot bot) {
         super(bot);

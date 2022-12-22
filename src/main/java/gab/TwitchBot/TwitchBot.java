@@ -7,7 +7,7 @@ import org.kitteh.irc.client.library.event.client.ClientNegotiationCompleteEvent
 import org.kitteh.irc.client.library.feature.twitch.TwitchSupport;
 
 import gab.TwitchBot.Commands.Command;
-import gab.TwitchBot.Handlers.PostwareHandler;
+import gab.TwitchBot.Handlers.WareHandler;
 import gab.TwitchBot.Utils.CommandEvent;
 import gab.Utils.ConfigHelper;
 import gab.Utils.Logger;
@@ -22,7 +22,8 @@ public class TwitchBot {
     public final Logger logger;
 
     private final Set<Command> commands;
-    private final Set<PostwareHandler> handlers;
+    private final Set<WareHandler> prewareHandlers;
+    private final Set<WareHandler> postwareHandlers;
 
     private final Client client;
 
@@ -30,7 +31,8 @@ public class TwitchBot {
         this.config = new Config();
         this.logger = new Logger("Twitch");
         this.commands = new HashSet<Command>();
-        this.handlers = new HashSet<PostwareHandler>();
+        this.prewareHandlers = new HashSet<WareHandler>();
+        this.postwareHandlers = new HashSet<WareHandler>();
 
         this.config.Address = "irc.chat.twitch.tv";
         this.config.Port = 443;
@@ -64,8 +66,11 @@ public class TwitchBot {
     public void addCommand(Command command) {
         commands.add(command);
     }
-    public void addHandler(PostwareHandler handler) {
-        handlers.add(handler);
+    public void addPrewareHandler(WareHandler handler) {
+        prewareHandlers.add(handler);
+    }
+    public void addPostwareHandler(WareHandler handler) {
+        postwareHandlers.add(handler);
     }
 
     @Handler
@@ -82,6 +87,9 @@ public class TwitchBot {
         logger.log("Message received: " + sender + " : " + message);
 
         if(!event.getClient().isUser((event.getActor()))){
+            for(WareHandler h : prewareHandlers)
+                h.execute(new CommandEvent(event, message));
+            
             if(message.startsWith(this.config.Prefix)) {
                 String command = message.substring(this.config.Prefix.length()).split(" ")[0];
                 String arguments = message.substring(this.config.Prefix.length() + command.length());
@@ -90,7 +98,7 @@ public class TwitchBot {
                         c.execute(new CommandEvent(event, arguments));
             }
 
-            for(PostwareHandler h : handlers)
+            for(WareHandler h : postwareHandlers)
                 h.execute(new CommandEvent(event, message));
         }
     }

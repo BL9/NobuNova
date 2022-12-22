@@ -6,10 +6,10 @@ import gab.TwitchBot.TwitchBot;
 import gab.TwitchBot.Utils.CommandEvent;
 import gab.Utils.Logger;
 
-public abstract class PostwareHandler {
+public abstract class WareHandler {
     protected final Logger logger;
 
-    public PostwareHandler(TwitchBot bot) {
+    public WareHandler(TwitchBot bot) {
         this.logger = bot.logger;
     }
 
