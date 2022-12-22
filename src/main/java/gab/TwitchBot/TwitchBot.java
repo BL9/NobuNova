@@ -7,6 +7,7 @@ import org.kitteh.irc.client.library.event.client.ClientNegotiationCompleteEvent
 import org.kitteh.irc.client.library.feature.twitch.TwitchSupport;
 
 import gab.TwitchBot.Commands.Command;
+import gab.TwitchBot.Handlers.PostwareHandler;
 import gab.TwitchBot.Utils.CommandEvent;
 import gab.Utils.ConfigHelper;
 import gab.Utils.Logger;
@@ -18,9 +19,10 @@ import java.util.Set;
 
 public class TwitchBot {
     private final Config config;
-    private final Logger logger;
+    public final Logger logger;
 
     private final Set<Command> commands;
+    private final Set<PostwareHandler> handlers;
 
     private final Client client;
 
@@ -28,6 +30,7 @@ public class TwitchBot {
         this.config = new Config();
         this.logger = new Logger("Twitch");
         this.commands = new HashSet<Command>();
+        this.handlers = new HashSet<PostwareHandler>();
 
         this.config.Address = "irc.chat.twitch.tv";
         this.config.Port = 443;
@@ -61,6 +64,9 @@ public class TwitchBot {
     public void addCommand(Command command) {
         commands.add(command);
     }
+    public void addHandler(PostwareHandler handler) {
+        handlers.add(handler);
+    }
 
     @Handler
     public void onConnect(ClientNegotiationCompleteEvent event) {
@@ -69,7 +75,7 @@ public class TwitchBot {
     }
 
     @Handler
-    public void onMessageReceived(ChannelMessageEvent event) throws IOException {
+    public void onMessageReceived(ChannelMessageEvent event) throws IOException, InterruptedException {
         String sender = event.getActor().getNick();
         String message = event.getMessage();
 
@@ -83,6 +89,9 @@ public class TwitchBot {
                     if(c.isThisCommand(command))
                         c.execute(new CommandEvent(event, arguments));
             }
+
+            for(PostwareHandler h : handlers)
+                h.execute(new CommandEvent(event, message));
         }
     }
 }
