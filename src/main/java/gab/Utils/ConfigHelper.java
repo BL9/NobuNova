@@ -62,7 +62,7 @@ public class ConfigHelper {
     public void save() throws IOException {
         if(hasChanges)
         {
-            FileWriter writer = new FileWriter(CONFIG_FILE_NAME, false);
+            FileWriter writer = new FileWriter(CONFIG_FILE_NAME, StandardCharsets.UTF_8, false);
         
             for(String key : data.keySet()) {
                 writer.write(key + "=" + data.get(key) + "\n");
