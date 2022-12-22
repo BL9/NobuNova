@@ -30,6 +30,7 @@ public final class App {
 
             twitchBot.addCommand(new OptInAttendanceCheckCommand());
             twitchBot.addCommand(new OptOutAttendanceCheckCommand());
+            twitchBot.addCommand(new GetAttendanceCommand());
 
             twitchBot.addPrewareHandler(new AttendanceHandler(twitchBot));
 
