@@ -4,11 +4,9 @@ import java.io.IOException;
 
 import gab.DiscordBot.DiscordBot;
 import gab.TwitchBot.TwitchBot;
-import gab.TwitchBot.Commands.GetAttendanceCommand;
-import gab.TwitchBot.Commands.OptInAttendanceCheckCommand;
-import gab.TwitchBot.Commands.OptOutAttendanceCheckCommand;
 import gab.TwitchBot.Handlers.AttendanceHandler;
 import gab.Utils.ConfigHelper;
+import gab.Utils.ProfileHelper;
 import gab.Utils.TwitchHelper;
 
 public final class App {
@@ -35,9 +33,9 @@ public final class App {
         TwitchHelper.getInstance(config);
         twitchBot = new TwitchBot(config);
 
-        twitchBot.addCommand(new OptInAttendanceCheckCommand());
-        twitchBot.addCommand(new OptOutAttendanceCheckCommand());
-        twitchBot.addCommand(new GetAttendanceCommand());
+        twitchBot.addCommand(new gab.TwitchBot.Commands.OptInAttendanceCheckCommand());
+        twitchBot.addCommand(new gab.TwitchBot.Commands.OptOutAttendanceCheckCommand());
+        twitchBot.addCommand(new gab.TwitchBot.Commands.GetAttendanceCommand());
 
         twitchBot.addPrewareHandler(new AttendanceHandler(twitchBot));
 
@@ -45,5 +43,9 @@ public final class App {
     }
     private static void setupDiscordBot(ConfigHelper config) throws IOException {
         discordBot = new DiscordBot(config);
+        
+        discordBot.addCommand(new gab.DiscordBot.Commands.GetAttendanceCommand());
+
+        discordBot.updateCommands();
     }
 }
