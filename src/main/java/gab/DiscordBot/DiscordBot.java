@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 public class DiscordBot extends ListenerAdapter {
     private final Logger logger;
@@ -20,6 +21,7 @@ public class DiscordBot extends ListenerAdapter {
 
     private final Set<Command> commands;
 
+    private final CommandListUpdateAction listCommandsAction;
     public DiscordBot(ConfigHelper configHelper) throws IOException {
         this.logger = new Logger("Discord");
         this.commands = new HashSet<Command>();
@@ -32,9 +34,19 @@ public class DiscordBot extends ListenerAdapter {
             .addEventListeners(this)
             .build();
 
-        jda.updateCommands().addCommands(
+        listCommandsAction = jda.updateCommands().addCommands(
             Commands.slash("ping", "Calculate the ping of the bot.")
-        ).queue();
+        );
+    }
+
+    public void addCommand(Command command) {
+        commands.add(command);
+        listCommandsAction.addCommands(Commands.slash(command.getName(), command.getDescription()));
+    }
+
+    public void updateCommands()
+    {
+        listCommandsAction.queue();
     }
 
     @Override
@@ -44,14 +56,6 @@ public class DiscordBot extends ListenerAdapter {
 
         logger.log("Command '" + commandName + "'received from: " + user);
 
-        for (Command command : commands) {
-            if(command.isThisCommand(commandName))
-            {
-                command.execute(event);
-                return;
-            }
-        }
-
         switch(event.getName())
         {
             case "ping":
@@ -60,7 +64,19 @@ public class DiscordBot extends ListenerAdapter {
                     .flatMap(v ->
                         event.getHook().editOriginalFormat("Pong: %d ms", System.currentTimeMillis() - time)
                     ).queue();
-                break;
+                return;
+        }
+
+        for (Command command : commands) {
+            if(command.isThisCommand(commandName))
+            {
+                try {
+                    command.execute(event);
+                } catch (Exception e) {
+                    logger.log("ERROR: " + e.getMessage());
+                }
+                return;
+            }
         }
     }
 }
