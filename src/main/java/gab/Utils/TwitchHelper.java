@@ -8,6 +8,8 @@ import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import javax.naming.NameNotFoundException;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -26,7 +28,6 @@ public class TwitchHelper {
         channelName = null;
         token = null;
     }
-
     private TwitchHelper(ConfigHelper configHelper) {
         this.channelName = configHelper.getValue("channel").substring(1);
         this.token = configHelper.getValue("oauth_token").substring(6);
@@ -80,5 +81,27 @@ public class TwitchHelper {
         }
 
         return streamingSince;
+    }
+    public String getUserId(String twitchName) throws IOException, InterruptedException, NameNotFoundException {
+        String uri = API_BASE_URL + "users?login=" + twitchName;
+        HttpClient client = HttpClient.newHttpClient();
+            HttpRequest req = HttpRequest.newBuilder(URI.create(uri))
+                .header("Authorization", "Bearer " + token)
+                .header("Client-Id", CLIENT_ID)
+                .build();
+
+        HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());            
+        if(res.statusCode() == 200)
+        {
+            JSONObject resBody = new JSONObject(res.body());
+            JSONArray data = resBody.getJSONArray("data");
+
+            if(data.length() > 0)
+                return data.getJSONObject(0).getString("id");
+            else
+                throw new NameNotFoundException();
+        } else {
+            throw new NameNotFoundException();
+        }
     }
 }

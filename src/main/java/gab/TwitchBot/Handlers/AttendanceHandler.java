@@ -3,6 +3,8 @@ package gab.TwitchBot.Handlers;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import javax.naming.NameNotFoundException;
+
 import gab.TwitchBot.TwitchBot;
 import gab.TwitchBot.Utils.CommandEvent;
 import gab.Utils.Profile;
@@ -16,7 +18,7 @@ public class AttendanceHandler extends WareHandler {
     }
 
     @Override
-    public void execute(CommandEvent event) throws IOException, InterruptedException {
+    public void execute(CommandEvent event) throws IOException, InterruptedException, NameNotFoundException {
         String actor = event.getInnerEvent().getActor().getNick();
 
         ProfileHelper ph = ProfileHelper.getInstance();

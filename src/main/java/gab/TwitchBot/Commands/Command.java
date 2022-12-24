@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.naming.NameNotFoundException;
+
 import gab.TwitchBot.Utils.CommandEvent;
 
 public abstract class Command {
@@ -14,7 +16,7 @@ public abstract class Command {
         return (name.compareTo(command) == 0) || aliases.contains(command);
     }
 
-    public abstract void execute(CommandEvent event) throws IOException;
+    public abstract void execute(CommandEvent event) throws IOException, NameNotFoundException, InterruptedException;
 
     protected void sendMessage(CommandEvent event, String message) {
         event.getInnerEvent().getChannel().sendMessage("/me " + message);

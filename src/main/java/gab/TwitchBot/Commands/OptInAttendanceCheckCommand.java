@@ -2,6 +2,8 @@ package gab.TwitchBot.Commands;
 
 import java.io.IOException;
 
+import javax.naming.NameNotFoundException;
+
 import gab.TwitchBot.Utils.CommandEvent;
 import gab.Utils.Profile;
 import gab.Utils.ProfileHelper;
@@ -12,7 +14,7 @@ public class OptInAttendanceCheckCommand extends Command{
     }
 
     @Override
-    public void execute(CommandEvent event) throws IOException {
+    public void execute(CommandEvent event) throws IOException, NameNotFoundException, InterruptedException {
         String actor = event.getInnerEvent().getActor().getNick();
         
         ProfileHelper ph = ProfileHelper.getInstance();
@@ -23,9 +25,9 @@ public class OptInAttendanceCheckCommand extends Command{
             ph.setProfile(profile);
             ph.save();
 
-            sendMessage(event, actor + " is now attending the roll calls.");
+            sendMessage(event, actor + " has signed up for duty aboard the Mothership.");
         } else {
-            sendMessage(event, actor + " is already attending the roll calls.");
+            sendMessage(event, actor + " is already signed up for duty.");
         }
     }
 }

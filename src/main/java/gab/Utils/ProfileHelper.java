@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.naming.NameNotFoundException;
+
 public class ProfileHelper {
     private static final String PROFILES_FILE = "profiles.txt";
     private static ProfileHelper instance = null;
@@ -30,8 +32,8 @@ public class ProfileHelper {
         {
             String[] segments = reader.nextLine().split(";");
 
-            if(segments.length == 4)
-                profiles.add(new Profile(segments[0], (segments[1].compareTo("1") == 0), Integer.parseInt(segments[2]), (segments[3].compareTo("0") == 0) ? null : LocalDateTime.parse(segments[3])));
+            if(segments.length == 6)
+                profiles.add(new Profile(segments[0], segments[1], segments[2], (segments[3].compareTo("1") == 0), Integer.parseInt(segments[4]), (segments[5].compareTo("0") == 0) ? null : LocalDateTime.parse(segments[5])));
         }
         reader.close();
     }
@@ -47,19 +49,39 @@ public class ProfileHelper {
     }
 
     
-    public Profile getProfile(String identifier) {
+    public Profile getProfile(String twitchName) throws NameNotFoundException, IOException, InterruptedException {
         for(Profile profile : profiles)
-            if(profile.getIdentifier().compareTo(identifier) == 0)
+            if(profile.getTwitchName().compareTo(twitchName) == 0)
                 return profile;
 
-        return new Profile(identifier, false, 0, null);
+        TwitchHelper th = TwitchHelper.getInstance();
+        String twitchId = th.getUserId(twitchName);
+
+        for(Profile profile : profiles)
+            if(profile.getTwitchId().compareTo(twitchId) == 0)
+            {
+                int index = profiles.indexOf(profile);
+                profile.setTwitchName(twitchName);
+                profiles.set(index, profile);
+                changed = true;
+                return profile;
+            }
+
+        return new Profile(twitchName, twitchId, "", false, 0, null);
+    }
+    public Profile getProfileByDiscord(String discordName) throws NameNotFoundException{
+        for(Profile profile : profiles)
+            if(profile.getDiscordName().compareTo(discordName) == 0)
+                return profile;
+
+        throw new NameNotFoundException();
     }
 
     public void setProfile(Profile profile) {
         int index = -1;
 
         for(int x = 0; x < profiles.size(); x++)
-            if(profiles.get(x).getIdentifier() == profile.getIdentifier()) {
+            if(profiles.get(x).getTwitchId() == profile.getTwitchId()) {
                 index = x;
                 break;
             }

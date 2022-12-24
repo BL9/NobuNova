@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.naming.NameNotFoundException;
+
 public class TwitchBot {
     private final Config config;
     public final Logger logger;
@@ -86,20 +88,25 @@ public class TwitchBot {
 
         logger.log("Message received: " + sender + " : " + message);
 
-        if(!event.getClient().isUser((event.getActor()))){
-            for(WareHandler h : prewareHandlers)
-                h.execute(new CommandEvent(event, message));
+        try {
+            if(!event.getClient().isUser((event.getActor()))){
+                for(WareHandler h : prewareHandlers)
+                    h.execute(new CommandEvent(event, message));
             
-            if(message.startsWith(this.config.Prefix)) {
-                String command = message.substring(this.config.Prefix.length()).split(" ")[0];
-                String arguments = message.substring(this.config.Prefix.length() + command.length());
-                for(Command c : commands)
-                    if(c.isThisCommand(command))
-                        c.execute(new CommandEvent(event, arguments));
-            }
+                if(message.startsWith(this.config.Prefix)) {
+                    String command = message.substring(this.config.Prefix.length()).split(" ")[0];
+                    String arguments = message.substring(this.config.Prefix.length() + command.length());
+                    for(Command c : commands)
+                        if(c.isThisCommand(command))
+                            c.execute(new CommandEvent(event, arguments));
+                }
 
-            for(WareHandler h : postwareHandlers)
-                h.execute(new CommandEvent(event, message));
+                for(WareHandler h : postwareHandlers)
+                    h.execute(new CommandEvent(event, message));
+            }
+        } catch (NameNotFoundException e) {
+            // TODO Auto-generated catch block
+            logger.log("ERROR: User " + sender + " not found.");
         }
     }
 }
