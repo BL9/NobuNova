@@ -9,7 +9,6 @@ import gab.Utils.ConfigHelper;
 import gab.Utils.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -27,7 +26,7 @@ public class DiscordBot extends ListenerAdapter {
         this.commands = new HashSet<Command>();
 
         String token = configHelper.getValue("discord_token");
-        String activity = configHelper.getValue("discord_activity");
+        //String activity = configHelper.getValue("discord_activity");
         configHelper.save();
 
         jda = JDABuilder.createDefault(token)
@@ -41,12 +40,17 @@ public class DiscordBot extends ListenerAdapter {
 
     public void addCommand(Command command) {
         commands.add(command);
-        listCommandsAction.addCommands(Commands.slash(command.getName(), command.getDescription()));
+        listCommandsAction.addCommands(Commands.slash(command.getName(), command.getDescription()).addOptions(command.getOptions()));
     }
-
     public void updateCommands()
     {
-        listCommandsAction.queue();
+        listCommandsAction.queue(result -> {
+            String logLine = "Update commands action complete. " + result.size() + " commands have been set:";
+            for (net.dv8tion.jda.api.interactions.commands.Command command : result) {
+                logLine += "\n   - " + command.getName() + " - with " + command.getOptions().size() + " options";
+            }
+            logger.log(logLine);
+        });
     }
 
     @Override
