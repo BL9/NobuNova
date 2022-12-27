@@ -69,6 +69,14 @@ public class ProfileHelper {
 
         return new Profile(twitchName, twitchId, "", false, 0, null);
     }
+    public Profile getProfileByTwitchId(String twitchId) {
+        for(Profile profile : profiles)
+            if(profile.getTwitchId().compareTo(twitchId) == 0)
+                return profile;
+
+        return new Profile("", twitchId, "", false, 0, null);
+    }
+
     public Profile getProfileByDiscord(String discordName) throws NameNotFoundException{
         for(Profile profile : profiles)
             if(profile.getDiscordName().compareTo(discordName) == 0)
