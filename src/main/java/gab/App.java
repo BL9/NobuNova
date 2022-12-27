@@ -6,7 +6,6 @@ import gab.DiscordBot.DiscordBot;
 import gab.TwitchBot.TwitchBot;
 import gab.TwitchBot.Handlers.AttendanceHandler;
 import gab.Utils.ConfigHelper;
-import gab.Utils.ProfileHelper;
 import gab.Utils.TwitchHelper;
 
 public final class App {
@@ -45,6 +44,7 @@ public final class App {
         discordBot = new DiscordBot(config);
         
         discordBot.addCommand(new gab.DiscordBot.Commands.GetAttendanceCommand());
+        discordBot.addCommand(new gab.DiscordBot.Commands.LinkCommand());
 
         discordBot.updateCommands();
     }
