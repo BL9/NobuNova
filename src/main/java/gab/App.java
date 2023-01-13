@@ -35,6 +35,7 @@ public final class App {
         twitchBot.addCommand(new gab.TwitchBot.Commands.OptInAttendanceCheckCommand());
         twitchBot.addCommand(new gab.TwitchBot.Commands.OptOutAttendanceCheckCommand());
         twitchBot.addCommand(new gab.TwitchBot.Commands.GetAttendanceCommand());
+        twitchBot.addCommand(new gab.TwitchBot.Commands.CounterCommand());
 
         twitchBot.addPrewareHandler(new AttendanceHandler(twitchBot));
 
