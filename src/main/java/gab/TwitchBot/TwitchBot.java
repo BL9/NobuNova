@@ -97,7 +97,7 @@ public class TwitchBot {
                 // Commands
                 if(message.startsWith(this.config.Prefix)) {
                     String command = message.substring(this.config.Prefix.length()).split(" ")[0];
-                    String arguments = message.substring(this.config.Prefix.length() + command.length());
+                    String arguments = message.substring(this.config.Prefix.length() + command.length()).trim();
                     for(Command c : commands)
                         if(c.isThisCommand(command))
                             c.execute(new CommandEvent(event, command, arguments));
