@@ -3,9 +3,6 @@ package gab.TwitchBot.Commands;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +14,7 @@ import org.kitteh.irc.client.library.feature.twitch.messagetag.Badges.Badge;
 
 import gab.TwitchBot.Utils.CommandEvent;
 import gab.TwitchBot.Utils.Counter;
-import gab.TwitchBot.Utils.Exceptions.CounterFormatException;
+import gab.TwitchBot.Utils.Exceptions.FormatException;
 
 public class CounterCommand extends Command {
     private static final String COUNTERS_FILE_NAME = "counters.txt";
@@ -156,20 +153,9 @@ public class CounterCommand extends Command {
         }
 
         if(success)
-            new Thread(() -> {saveCounters();}).start();
+            new Thread(() -> {save(counters, COUNTERS_FILE_NAME);}).start();
     }
 
-    private void saveCounters() {
-        try {
-            List<String> content = new ArrayList<String>();
-            for(Counter counter : counters)
-                content.add(counter.toString());
-
-            Files.write(Path.of(COUNTERS_FILE_NAME), content, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     private void loadCounters() {
         try {
             File file = new File(COUNTERS_FILE_NAME);
@@ -181,7 +167,7 @@ public class CounterCommand extends Command {
                 try {
                     Counter counter = Counter.fromString(reader.nextLine());
                     counters.add(counter);
-                } catch (CounterFormatException e) {
+                } catch (FormatException e) {
                     System.out.println("An error occured while loading counters.");
                 }
             }

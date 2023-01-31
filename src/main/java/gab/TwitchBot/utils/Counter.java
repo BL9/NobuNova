@@ -1,6 +1,6 @@
 package gab.TwitchBot.Utils;
 
-import gab.TwitchBot.Utils.Exceptions.CounterFormatException;
+import gab.TwitchBot.Utils.Exceptions.FormatException;
 
 public class Counter {
     private String name;
@@ -30,10 +30,10 @@ public class Counter {
     public void reset() {
         value = defaultValue;
     }
-    public static Counter fromString(String counterString) throws CounterFormatException {
+    public static Counter fromString(String counterString) throws FormatException {
         String[] splitted = counterString.split(";");
         if(splitted.length != 4)
-            throw new CounterFormatException();
+            throw new FormatException();
         return new Counter(splitted[1], Integer.parseInt(splitted[2]), Integer.parseInt(splitted[3]));
     }
 
